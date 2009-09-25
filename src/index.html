@@ -13,7 +13,7 @@
 </head>
 <body>
 	<h1>Waz' up</h1>
-	<div class="container">
+	<div id="container">
 		buh
 	</div>
 	
@@ -50,20 +50,31 @@
 				if (group==lastInterval){
 					curGroup.push(t);
 				} else {
-					if (curGroup.length) groups.push({tweets:curGroup, users:{}});
+					if (curGroup.length) groups.push({tweets:curGroup, users:{}, numTweets:0});
 					curGroup = [t]; // Empty and put the first one in the next group.
 					lastInterval = group;
 				}
 			}
+			// Add some stats to the tweets.
+			var maxNumTweets = 0;
 			for (var i=0, l=groups.length, g; i<l; i++){
 				g = groups[i];
 				for (var j=0, lt=g.tweets.length, tweet; j<lt; j++){
 					tweet = g.tweets[j];
 					if (!g.users[tweet.from_user]) g.users[tweet.from_user] = 0;
 					g.users[tweet.from_user]++;
+					g.numTweets++;
 				}
+				maxNumTweets = g.numTweets > maxNumTweets ? g.numTweets : maxNumTweets;
 			}
-console.log(groups);
+			node = document.getElementById("container");
+			var width = parseInt(node.ownerDocument.defaultView.getComputedStyle(node, null).width);
+			
+			// Draw the stats.
+			for (var i=0, l=groups.length, g; i<l; i++){
+				g = groups[i];
+			}
+console.log(groups, maxNumTweets, width);
 		}
 		function cleanUp(){
 			// Clean up the script tags that were added by the JSONP.
