@@ -1,0 +1,48 @@
+body, html {
+  font-family: Arial, Verdana, Tahoma;
+  background-color: black;
+  color: white;
+  width: 98%;
+}
+
+/*
+	166dpi - Nokia E52-1
+	232dpi - Nokia 5800 XpressMusic
+	265dpi - Samsung R1
+*/
+@media all and (min-resolution: 150dpi) {
+  body, html {
+    font-size: 15px;
+  }
+}
+@media all and (min-resolution: 200dpi) {
+  body, html {
+    font-size: 20px;
+  }
+}
+@media all and (min-resolution: 220dpi) {
+  body, html {
+    font-size: 22px;
+  }
+}
+@media all and (min-resolution: 250dpi) {
+  body, html {
+    font-size: 27px;
+  }
+}
+
+/* Resetting the H1 and H2 styles, to be sure they are relative to the base font size set above. */
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+
+
+.container {
+	border: 1px solid white;
+	border-width: 0 0 1px 1px;
+}
