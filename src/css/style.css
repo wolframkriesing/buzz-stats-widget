@@ -1,8 +1,15 @@
 body, html {
-  font-family: Arial, Verdana, Tahoma;
-  background-color: black;
-  color: white;
-  width: 98%;
+	font-family: Arial, Verdana, Tahoma;
+	background: url(../img/bg.png) repeat;
+	color: black;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.displayNone {
+	display: none;
 }
 
 /*
@@ -11,38 +18,131 @@ body, html {
 	265dpi - Samsung R1
 */
 @media all and (min-resolution: 150dpi) {
-  body, html {
-    font-size: 15px;
-  }
+	body, html {
+		font-size: 15px;
+	}
 }
 @media all and (min-resolution: 200dpi) {
-  body, html {
-    font-size: 20px;
-  }
+	body, html {
+		font-size: 20px;
+	}
 }
 @media all and (min-resolution: 220dpi) {
-  body, html {
-    font-size: 22px;
-  }
+	body, html {
+		font-size: 22px;
+	}
 }
 @media all and (min-resolution: 250dpi) {
-  body, html {
-    font-size: 27px;
-  }
+	body, html {
+		font-size: 27px;
+	}
 }
 
 /* Resetting the H1 and H2 styles, to be sure they are relative to the base font size set above. */
 h1 {
-  font-size: 1.5em;
+	font-size: 1.5em;
 }
 
 h2 {
-  font-size: 1.3em;
+	font-size: 1.3em;
 }
 
-
-
-#container {
-	border: 1px solid white;
-	border-width: 0 0 1px 1px;
+.body {
+	position: absolute;
+	top: 3em;
+	right: 0;
+	bottom: 3em;
+	left: 0;
 }
+
+	.body .info {
+		position: absolute;
+		top: 0;
+		right: 0.5em;
+		left: 0.5em;
+		
+		height: 4em;
+		border: 1px solid #ccc;
+		background: white;
+		padding: 0.5em;
+		margin: 0.5em 0;
+
+		-moz-border-radius: 6px;
+		-webkit-border-radius: 6px;
+	}
+	
+	.body .chart {
+		position: absolute;
+		top: 6em;
+		right: 0;
+		bottom: 4.5em;
+		left: 0;
+
+		/* Can be replaced by SVG */
+		background: url(../img/bgStatus.png) repeat-x bottom left;
+	}
+	
+	.body .tweets {
+		background: white;
+		height: 3.5em;
+		padding: 0.5em;
+
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		left: 0;
+
+		border-top: 1px solid #8b8b8b;
+	}
+	
+		.body .tweets img {
+			width: 45px;
+			height: 45px;
+			margin-right: 0.5em;
+			vertical-align: top;
+			float: left;
+			border: 4px solid green;
+		}
+		
+		.body .tweets .user,
+		.body .tweets .time {
+			font-weight: bold;
+		}
+
+
+.header,
+.footer {
+	background: #1c1c1c url(../img/bgHeader.png) repeat-x;
+	padding: 0.8em;
+	position: fixed;
+	width: 100%;
+	font-size: 1em;
+	color: white;
+	height: 3em;
+	text-align: center;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+.header {
+	border-bottom: 1px solid #6f6f6f;
+	top: 0;
+}
+
+.footer {
+	bottom: 0px;
+	border-top: 1px solid #8c8c8c;
+}
+
+	.footer label {
+		margin-right: 10px;
+	}
+
+	.footer input {
+		
+		border: 1px solid #ccc;
+		-moz-border-radius: 10px;
+		padding: 3px 6px;
+	}
