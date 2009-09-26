@@ -5,6 +5,11 @@ var ui;
 			// tweet - contains all the data of the latest tweet
 			// group - this is a ref to the group this new tweet is in
 console.log("onNewTweet = ", arguments);
+			var tweets = document.getElementsByClassName("tweets")[0];
+			tweets.getElementsByClassName("user")[0].innerHTML = tweet.from_user;
+			tweets.getElementsByClassName("date")[0].innerHTML = tweet.created_at;
+			tweets.getElementsByClassName("content")[0].innerHTML = tweet.tweet.text;
+			tweets.getElementsByTagName("img")[0].src = tweet.profile_image_url;
 		},
 		
 		onNewGroup:function(startTime, group){
@@ -12,8 +17,8 @@ console.log("onNewTweet = ", arguments);
 			// A new group is
 			// startTime - this is the time when this group starts, i.e. "10:30"
 			// Tell SVG about it
-			document.getElementById("svgBars").contentDocument.drawGroup(startTime, group);
 console.log("onNewGroup = ", arguments);
+			document.getElementById("svgBars").contentDocument.drawGroup(startTime, group);
 		},
 		
 		colors: [

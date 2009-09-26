@@ -58,14 +58,16 @@ h2 {
 	.body .info {
 		position: absolute;
 		top: 0;
-		right: 0.5em;
-		left: 0.5em;
-		
+		right: 0.73em;
+		left: 0.73em;
+
+		font-size: 0.81em;
+
 		height: 4em;
 		border: 1px solid #ccc;
 		background: white;
-		padding: 0.5em;
-		margin: 0.5em 0;
+		padding: 0.73em;
+		margin: 0.73em 0;
 
 		-moz-border-radius: 6px;
 		-webkit-border-radius: 6px;
@@ -84,8 +86,10 @@ h2 {
 	
 	.body .tweets {
 		background: white;
-		height: 3.5em;
-		padding: 0.5em;
+		height: 3.98em;
+		padding: 0.73em;
+		
+		font-size: 0.81em;
 
 		position: absolute;
 		bottom: 0;
