@@ -7,19 +7,18 @@ var tweetData;
 		
 		groupInterval:10, // The interval in which the tweets are grouped into.
 		
-		fetchInterval:1/60, // How often do we get data from twitter, in minutes?
+		fetchInterval:1, // How often do we get data from twitter, in minutes?
 		
 		filterString:"#ota09", // The initial filter string.
 		
 		_sinceId:null, // The last tweet from twitter we have showed.
 		
 		start:function(){
+			var that = this,
+				interval;
 			this.load(true);
-			var that = this, interval;
-			setTimeout(function(){
-				//interval = setInterval(function(){
-					that.load();
-				//}, this.fetchInterval * 60 * 1000);
+			interval = setInterval(function(){
+				that.load();
 			}, this.fetchInterval * 60 * 1000);
 		},
 		
@@ -37,16 +36,19 @@ var tweetData;
 		},
 		
 		_appendData:function(tweets){
-			
 console.log(arguments);
 		},
 		
 		_buildInitialData:function(tweets){
 			this._cleanUp(); // Clean up the JSONP stuff, free memory, etc.
+			if (tweets.results.length==0){
+				return;
+			}
 // TODO actually deleting the variables needs to be done to completely free the mem, iirc
 			var date, group, minutes,
 				curGroup = [];
 				lastInterval = 0;
+			this._sinceId = tweets.results[0].id;
 			for (var i=0, l=tweets.results.length, t; i<l; i++){
 				// Fortunately tweets are sorted by date.
 				t = tweets.results[i];
@@ -56,12 +58,17 @@ console.log(arguments);
 				if (group==lastInterval){
 					curGroup.push(t);
 				} else {
-					if (curGroup.length) this.groups.push({tweets:curGroup, users:{}, numTweets:0});
+					if (curGroup.length){
+						this.groups.push({
+							tweets:curGroup,
+							users:{},
+							numTweets:0,
+							startTime:("0"+date.getHours()).substr(-2) + ":" + group
+						});
+					}
 					curGroup = [t]; // Empty and put the first one in the next group.
 					lastInterval = group;
 				}
-				this._sinceId = t.id;
-console.log('this._sinceId = ', this._sinceId);
 			}
 			// Add some stats to the tweets.
 			var maxNumTweets = 0;
@@ -75,7 +82,10 @@ console.log('this._sinceId = ', this._sinceId);
 				}
 				this.maxNumTweets = g.numTweets > this.maxNumTweets ? g.numTweets : this.maxNumTweets;
 			}
-console.log(this);
+			for (var i=0, l=this.groups.length, g; i<l; i++){
+				g = this.groups[i];
+				ui.onNewGroup(g.startTime, g);
+			}
 		},
 		
 		_jsonpNode:null,
