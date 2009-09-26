@@ -1,85 +1,371 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  viewBox="0 0 200 200">
+  viewBox="0 0 200 220" id="root">
 
+<defs>
+  <linearGradient id="shadow" x1="0" x2="1" y1="0" y2="0">
+    <stop offset="0" stop-color="#000" stop-opacity="0" />
+    <stop offset="1" stop-color="#000" stop-opacity="0.8" />
+  </linearGradient>
+</defs>
+<rect width="100%" height="100%" fill-opacity="1" fill="#FFF"></rect>
 <g id="container">
-  <text text-anchor="middle" x="15" y="80" fill="#FFF" font-size="8">98</text>
-  <text text-anchor="middle" x="15" y="200" fill="#FFF" font-size="8">12:00</text>
-  <rect width="10" height="50" x="10" y="130" fill="#bf1313"></rect>
-  <rect width="10" height="20" x="10" y="110" fill="#69bf13"></rect>
-  <rect width="10" height="18" x="10" y="93" fill="#13bfbf"></rect>
-  <rect width="10" height="5"  x="10" y="88" fill="#6913bf"></rect>
 </g>
-<!-- script xlink:href="svgBubble.js" type="application/ecmascript" charset="utf-8"></script -->
 <script type="application/ecmascript" charset="utf-8">
 <![CDATA[
   var svgns = "http://www.w3.org/2000/svg";
-  var container=document.getElementById("container");
   
-  var colors=[  	
-    "#bf1313", // 0
-    "#69bf13", // 90
-    "#13bfbf", // 180
-    "#6913bf", // 270
-    "#bf6913", // 30
-    "#13bf13", // 120
-    "#1369bf", // 210
-    "#bf13bf", // 300
-    "#bfbf13", // 60
-    "#13bf69", // 150
-    "#1313bf", // 240
-    "#bf1369"  // 330
-  ];
-  
-  
-  var barPos=0;
-  document.drawGroup=function(startTime, group) {
-    console.log("group going to svg",group);
-    
-    // test..
-    if(barPos < 20) {
-    
-      var totalHeight=180;
-      var width=20;
-      var margin=40;
-      var yMax=200;
-    
-      console.log(group.tweets.length);
-      for (var i=0; i < group.tweets.length; i++) {
-        var yPos=0;
-        console.log(i);
-        
-        /*
-        var p = document.createElementNS(SVG, "rect");
-        p.setAttribute("id", id);
-        
-        svgSetXYWH(p, x, y, w, h);
-        p.setAttribute("rx", 30);
-        p.setAttribute("ry", 30);
-        p.setAttribute("fill", fill);
-        p.setAttribute("stroke", stroke);
-        p.setAttribute("stroke-width", 10);
-        */
-        
-        var calcHeight=Math.round(totalHeight/group.tweets.length);
-        
-        var barPiece=document.createElementNS(svgns,"rect");
-        barPiece.setAttribute("width",width);
-        barPiece.setAttribute("height",calcHeight);
-        barPiece.setAttribute("x",Math.round(barPos*margin + 5));
-        var calcY=yMax-calcHeight;
-        yPos+=calcY;
-        barPiece.setAttribute("y",calcY);
-        barPiece.setAttribute("fill","red");
-        container.appendChild(barPiece);
-        console.log(barPiece);
-        
-        // testing..
-        
-        barPos++;
-      };
+  // two modes
+  var manageModes=function() {
+    var root=document.getElementById("root");
+    var maxGroups;
+    if(window.widget && (widget.widgetMode=="application" || widget.widgetMode=="widget")) {
+      // landscape-ish for application and widget mode
+      root.setAttribute("viewBox","0 0 200 220");
+      maxGroups=5;
+    }
+    else {
+      // and square, for docked and floating mode
+      root.setAttribute("viewBox","0 0 360 220");
+      maxGroups=8;
     }
   };
+  manageModes();
+  if(window.widget) {
+    widget.addEventListener("widgetmodechange",manageModes,false);
+  }
+  
+  var container=document.getElementById("container");
+  
+  var drawnGroups=0;
+  var maximumTweetsInAGroup=0;
+  var totalHeight=170;
+  var width=20;
+  var margin=40;
+  var yMax=200;
+  var startX=10;
+  
+  var myGroupObject=[];
+  
+  document.drawGroup=function(startTime, group) {
+    
+    // test..
+    if(drawnGroups < 10) {
+      
+      if(group.tweets.length > maximumTweetsInAGroup) {
+        // TODO: Must redraw all.
+        maximumTweetsInAGroup=group.tweets.length;
+      }
+      
+      var addAllHeights=0;
+      var currentY=yMax;
+      var firstYValue;
+      
+      // starting from bottom
+      // for (var i=group.users.length-1; i >= 0; i--) {
+      for (var i=0; i < group.users.length; i++) {
+        
+        var xValue=Math.round(drawnGroups*margin + startX);
+        var calcHeight=Math.round(totalHeight*(group.users[i].numTweets/maximumTweetsInAGroup));
+        addAllHeights+=calcHeight;
+        var calcY=currentY-calcHeight;
+        var bar=document.createElementNS(svgns,"rect");
+        bar.setAttribute("width",width);
+        bar.setAttribute("height",calcHeight);
+        bar.setAttribute("x",xValue);
+        bar.setAttribute("y",calcY);
+        bar.setAttribute("fill",group.users[i].color);
+        container.appendChild(bar);
+        
+        currentY=calcY;
+      };
+      // Add count to top
+      var totalNumTxt=document.createElementNS(svgns,"text");
+      totalNumTxt.setAttribute("text-anchor","middle");
+      totalNumTxt.setAttribute("fill","#000");
+      totalNumTxt.setAttribute("font-size","9");
+      totalNumTxt.setAttribute("font","Arial");
+      totalNumTxt.setAttribute("x",xValue+(width/2));
+      totalNumTxt.setAttribute("y",currentY-5);
+      totalNumTxt.textContent=group.tweets.length;
+      container.appendChild(totalNumTxt);
+      
+      // Add date to bottom if applicable
+      if(group.startTime) {
+        var timeTxt=document.createElementNS(svgns,"text");
+        timeTxt.setAttribute("text-anchor","middle");
+        timeTxt.setAttribute("fill","#000");
+        timeTxt.setAttribute("x",xValue+(width/2));
+        timeTxt.setAttribute("y",yMax+11);
+        timeTxt.setAttribute("font-size","9");
+        timeTxt.setAttribute("font","Arial");
+        timeTxt.textContent=group.startTime;
+        container.appendChild(timeTxt);
+      }
+      
+      // Add shadow box to justify the use of svg. Even more.
+      var shadowed=document.createElementNS(svgns,"rect");
+      shadowed.setAttribute("width",width);
+      shadowed.setAttribute("height",addAllHeights);
+      shadowed.setAttribute("x",xValue);
+      shadowed.setAttribute("y",calcY);
+      shadowed.setAttribute("fill","url(#shadow)");
+      shadowed.setAttribute("fill-opacity",0.5);
+      container.appendChild(shadowed);
+    }
+    drawnGroups++;
+    
+    var update=function() {
+      // must re-calculate height and y position
+    }
+    
+    // done drawing the group. make a reference for it to survive.
+    myGroupObject.push(
+      (function(ob){
+        return ob || null;
+      })(/* { insert essential data pairs here } */)
+    );
+  };
+  
+  
+  
+  /*
+  // FAKE DATA
+  
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:5
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:4
+        },
+        {
+          color:"#00F",
+          id:"ulich",
+          numTweets:4
+        },
+        {
+          color:"magenta",
+          id:"jsus",
+          numTweets:3
+        },
+        {
+          color:"orange",
+          id:"uschi",
+          numTweets:1
+        }
+      ],
+      startTime:"20:50"
+    });
+    
+    
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:5
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:4
+        },
+        {
+          color:"#00F",
+          id:"ulich",
+          numTweets:4
+        },
+        {
+          color:"magenta",
+          id:"jsus",
+          numTweets:3
+        },
+        {
+          color:"orange",
+          id:"uschi",
+          numTweets:1
+        }
+      ],
+      startTime:"21:00"
+    });
+    
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:5
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:4
+        },
+        {
+          color:"#00F",
+          id:"ulich",
+          numTweets:4
+        },
+        {
+          color:"magenta",
+          id:"jsus",
+          numTweets:1
+        },
+        {
+          color:"orange",
+          id:"uschi",
+          numTweets:1
+        }
+      ],
+      startTime:"21:10"
+    });
+    
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"21:20"
+    });
+
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        },
+        {
+          color:"fuchsia",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"21:30"
+    });
+
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        },
+        {
+          color:"fuchsia",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"21:40"
+    });
+
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        },
+        {
+          color:"fuchsia",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"21:50"
+    });
+    
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        },
+        {
+          color:"fuchsia",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"22:00"
+    });
+    
+  document.drawGroup("startTime",
+    {
+      tweets:[{},{},{},{},{},{},{}],
+      users:[
+        {
+          color:"green",
+          id:"peter",
+          numTweets:3
+        },
+        {
+          color:"red",
+          id:"uschi",
+          numTweets:2
+        },
+        {
+          color:"fuchsia",
+          id:"uschi",
+          numTweets:2
+        }
+      ],
+      startTime:"22:10"
+    });
+    
+  */
 
 ]]>
 </script>
