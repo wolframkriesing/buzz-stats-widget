@@ -33,8 +33,8 @@
   
   
   var barPos=0;
-  document.drawGroup=function(group) {
-    // console.log("group going to svg",group);
+  document.drawGroup=function(startTime, group) {
+    console.log("group going to svg",group);
     
     // test..
     if(barPos < 20) {

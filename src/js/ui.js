@@ -11,6 +11,8 @@ console.log("onNewTweet = ", arguments);
 			// If a new group opened.
 			// A new group is
 			// startTime - this is the time when this group starts, i.e. "10:30"
+			// Tell SVG about it
+			document.getElementById("svgBars").contentDocument.drawGroup(startTime, group);
 console.log("onNewGroup = ", arguments);
 		},
 		
