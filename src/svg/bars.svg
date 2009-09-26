@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 200 200">
+
+<g id="container">
+  <text text-anchor="middle" x="15" y="80" fill="#FFF" font-size="8">98</text>
+  <text text-anchor="middle" x="15" y="200" fill="#FFF" font-size="8">12:00</text>
+  <rect width="10" height="50" x="10" y="130" fill="#bf1313"></rect>
+  <rect width="10" height="20" x="10" y="110" fill="#69bf13"></rect>
+  <rect width="10" height="18" x="10" y="93" fill="#13bfbf"></rect>
+  <rect width="10" height="5"  x="10" y="88" fill="#6913bf"></rect>
+</g>
+<!-- script xlink:href="svgBubble.js" type="application/ecmascript" charset="utf-8"></script -->
+<script type="application/ecmascript" charset="utf-8">
+<![CDATA[
+  var svgns = "http://www.w3.org/2000/svg";
+  var container=document.getElementById("container");
+  
+  var colors=[  	
+    "#bf1313", // 0
+    "#69bf13", // 90
+    "#13bfbf", // 180
+    "#6913bf", // 270
+    "#bf6913", // 30
+    "#13bf13", // 120
+    "#1369bf", // 210
+    "#bf13bf", // 300
+    "#bfbf13", // 60
+    "#13bf69", // 150
+    "#1313bf", // 240
+    "#bf1369"  // 330
+  ];
+  
+  
+  var barPos=0;
+  document.drawGroup=function(group) {
+    // console.log("group going to svg",group);
+    
+    // test..
+    if(barPos < 20) {
+    
+      var totalHeight=180;
+      var width=20;
+      var margin=40;
+      var yMax=200;
+    
+      console.log(group.tweets.length);
+      for (var i=0; i < group.tweets.length; i++) {
+        var yPos=0;
+        console.log(i);
+        
+        /*
+        var p = document.createElementNS(SVG, "rect");
+        p.setAttribute("id", id);
+        
+        svgSetXYWH(p, x, y, w, h);
+        p.setAttribute("rx", 30);
+        p.setAttribute("ry", 30);
+        p.setAttribute("fill", fill);
+        p.setAttribute("stroke", stroke);
+        p.setAttribute("stroke-width", 10);
+        */
+        
+        var calcHeight=Math.round(totalHeight/group.tweets.length);
+        
+        var barPiece=document.createElementNS(svgns,"rect");
+        barPiece.setAttribute("width",width);
+        barPiece.setAttribute("height",calcHeight);
+        barPiece.setAttribute("x",Math.round(barPos*margin + 5));
+        var calcY=yMax-calcHeight;
+        yPos+=calcY;
+        barPiece.setAttribute("y",calcY);
+        barPiece.setAttribute("fill","red");
+        container.appendChild(barPiece);
+        console.log(barPiece);
+        
+        // testing..
+        
+        barPos++;
+      };
+    }
+  };
+
+]]>
+</script>
+
+</svg>
