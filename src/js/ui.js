@@ -11,7 +11,7 @@ console.log("onNewTweet = ", arguments);
 			tweets.getElementsByClassName("date")[0].innerHTML = tweet.created_at;
 			tweets.getElementsByClassName("content")[0].innerHTML = tweet.text;
 			avatar.src = tweet.profile_image_url;
-			avatar.style.borderColor = group.users[0].color;
+			avatar.style.borderColor = tweetData.getColorByUser(tweet.from_user_id);
 		},
 		
 		onNewGroup:function(startTime, group){
