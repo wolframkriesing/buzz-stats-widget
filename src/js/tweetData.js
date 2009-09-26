@@ -55,6 +55,7 @@ console.log(arguments);
 				date = new Date(t.created_at);
 				minutes = date.getMinutes();
 				group = minutes - minutes % this.groupInterval;
+console.log('date = ', date, group, date.getHours());
 				if (group==lastInterval){
 					curGroup.push(t);
 				} else {
@@ -62,8 +63,7 @@ console.log(arguments);
 						this.groups.push({
 							tweets:curGroup,
 							users:{},
-							numTweets:0,
-							startTime:("0"+date.getHours()).substr(-2) + ":" + group
+							startTime:("0"+date.getHours()).substr(-2) + ":" + ("0"+group).substr(-2)
 						});
 					}
 					curGroup = [t]; // Empty and put the first one in the next group.
@@ -82,7 +82,8 @@ console.log(arguments);
 				}
 				this.maxNumTweets = g.numTweets > this.maxNumTweets ? g.numTweets : this.maxNumTweets;
 			}
-			for (var i=0, l=this.groups.length, g; i<l; i++){
+console.log('this.groups = ', this.groups);
+			for (var i=this.groups.length-1, g; i>-1; i--){
 				g = this.groups[i];
 				ui.onNewGroup(g.startTime, g);
 			}
