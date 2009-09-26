@@ -105,12 +105,15 @@ h2 {
 			margin-right: 0.5em;
 			vertical-align: top;
 			float: left;
-			border: 4px solid green;
+			border: 4px solid white;
 		}
 		
-		.body .tweets .user,
-		.body .tweets .time {
+		.body .tweets .user {
 			font-weight: bold;
+		}
+		
+		.body .tweets .date {
+			font-style: italic;
 		}
 
 

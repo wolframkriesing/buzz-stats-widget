@@ -5,11 +5,13 @@ var ui;
 			// tweet - contains all the data of the latest tweet
 			// group - this is a ref to the group this new tweet is in
 console.log("onNewTweet = ", arguments);
-			var tweets = document.getElementsByClassName("tweets")[0];
+			var tweets = document.getElementsByClassName("tweets")[0],
+				avatar = tweets.getElementsByTagName("img")[0];
 			tweets.getElementsByClassName("user")[0].innerHTML = tweet.from_user;
 			tweets.getElementsByClassName("date")[0].innerHTML = tweet.created_at;
-			tweets.getElementsByClassName("content")[0].innerHTML = tweet.tweet.text;
-			tweets.getElementsByTagName("img")[0].src = tweet.profile_image_url;
+			tweets.getElementsByClassName("content")[0].innerHTML = tweet.text;
+			avatar.src = tweet.profile_image_url;
+			avatar.style.borderColor = tweetData.getColorByUser(tweet.from_user_id);
 		},
 		
 		onNewGroup:function(startTime, group){

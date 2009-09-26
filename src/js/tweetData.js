@@ -108,6 +108,8 @@ ui.onNewTweet(tweets.results[0], this.groups[this.groups.length-1]);
 				g = this.groups[i];
 				ui.onNewGroup(g.startTime, g);
 			}
+			// The first new tweet.
+			ui.onNewTweet(this.groups[0].tweets[0], this.groups[0]);
 		},
 		
 		_userToColor:{},
